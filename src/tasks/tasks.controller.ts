@@ -7,9 +7,14 @@ import {
 	Delete,
 	Patch,
 	Query,
+	UsePipes,
+	ValidationPipe,
 } from '@nestjs/common';
+import { IsEnum } from 'class-validator';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
+import { UpdateTaskStatusDto } from './dto/update-task-status.dto';
+import { ToLowerCase } from './pipes/lower-case.pipe';
 import { TaskStatus } from './task.model';
 import { TasksService } from './tasks.service';
 
@@ -41,13 +46,22 @@ export class TasksController {
 	@Patch('/:id/status')
 	async updateTaskStatus(
 		@Param('id') id: string,
-		@Body('status') status: TaskStatus,
+		//@Body('status') status: TaskStatus, // Get property status from body object
+		@Body() updateTaskStatusDto: UpdateTaskStatusDto
 	) {
+		const { status } = updateTaskStatusDto;
 		return await this.tasksService.updateTaskStatus(id, status);
 	}
 
 	@Delete('/:id')
 	async deleteTask(@Param('id') id: string) {
 		return await this.tasksService.deleteTaskById(id);
+	}
+
+	@Post('/testCustomPipe')
+	async testCustomPipe(
+		@Body('description', ToLowerCase) description: string
+	) {
+		return description;
 	}
 }
