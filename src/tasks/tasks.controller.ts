@@ -6,16 +6,12 @@ import {
 	Post,
 	Delete,
 	Patch,
-	Query,
-	UsePipes,
-	ValidationPipe,
+	Query
 } from '@nestjs/common';
-import { IsEnum } from 'class-validator';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { UpdateTaskStatusDto } from './dto/update-task-status.dto';
 import { ToLowerCase } from './pipes/lower-case.pipe';
-import { TaskStatus } from './task.model';
 import { TasksService } from './tasks.service';
 
 @Controller('tasks') // This will hadnle requests to http://localhost:3000/tasks
