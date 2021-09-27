@@ -71,3 +71,61 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+## TypeORM 
+
+Object Relational Mapping (ORM)
+
+Object-Relation Mappaing (ORM) is a tchnique that lets you query and manipulate data from a database, using an object-oriented paradigm.
+
+There are many ORM libraries that allow developers to communicate to the database using their preferred programming language (here we are using TypeScript instead of SQL), rather than sending queries directly.
+
+---
+
+Pros and Cons of using ORM library:
+
+Pros: 
+
+Writing the data model in one place is easier to maintain. Less repetition.
+
+Lots of things done automatically. Database handling, data types, relations etcetera.
+
+No need to write SQL syntax (easy to learn, hard ro master). Using your natural way of coding.
+
+Database abstraction. You can change the database type whenever you wish.
+
+Leverages Object Oriented Programming, therefore things like inheritance are easy to achieve.
+
+Cons:
+
+You have to learn it, and ORM libraries are not allways simple.
+
+Performance is alright, but it is easy to neglect.
+
+Makes it easy to forget (or never learn) what's happening behind the scenes, wich can lead to a variety of mantainability issues.
+
+---
+
+TypeORM
+
+TypeORM is an Object Relational Mapper that can run in Node.js and be used with Typescript (or JavaScript).
+
+Helps us define and manage entities, repositories, columns, relations, replication, indices, queries, logging and so much more.
+
+Example Retriveing all tasks owned by "Ashley" and are of status "Done".
+
+TypeORM: const tasks = await Task.find({ status: 'DONE', user: 'Ashley'});
+
+JavaScript: let tasks;
+db.query('SELECT * FROM tasks WHERE status = "DONE" AND user = "Ashley"', (err, result) => {
+	if (err) {
+		throw new Error('Could not retrieve tasks!');
+	}
+	tasks = result.rows;
+});
+
+
+
+
+
+
