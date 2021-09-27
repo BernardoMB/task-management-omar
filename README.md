@@ -124,8 +124,11 @@ db.query('SELECT * FROM tasks WHERE status = "DONE" AND user = "Ashley"', (err, 
 	tasks = result.rows;
 });
 
+## Auth
 
-
-
-
+Authentication: Eres quien dices que eres
+Ahrotization: accesos dependiendo el rol
+Objetivo en la aplicacion:
+* Proteger los recursos de los usuarios
+* Que los usuarios sean duseños de las tasks
 
