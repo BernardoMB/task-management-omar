@@ -6,6 +6,8 @@ import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { TasksRepository } from './trask.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult } from 'typeorm';
+import { User } from 'src/auth/model/user.entity';
+import { identity } from 'rxjs';
 
 @Injectable()
 export class TasksService {
@@ -14,14 +16,14 @@ export class TasksService {
 		private tasksRepository: TasksRepository
 	) {}
 
-	private tasks: Array<Task> = [
+	/* private tasks: Array<Task> = [
 		{
 			id: uuid(),
 			title: 'Haz la tarea',
 			description: 'Tarea de computacion',
 			status: TaskStatus.OPEN,
 		},
-	];
+	]; */
 
 	/* async getAllTasks(): Promise<Array<Task>> {
 		return this.tasks;
@@ -45,8 +47,8 @@ export class TasksService {
 		return tasks;
 	} */
 
-	async getTasks(filterDto: GetTasksFilterDto): Promise<Task[]> {
-		return this.tasksRepository.getTasks(filterDto);
+	async getTasks(filterDto: GetTasksFilterDto, user: User): Promise<Task[]> {
+		return this.tasksRepository.getTasks(filterDto, user);
 	}
 
 	/* async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
@@ -61,8 +63,8 @@ export class TasksService {
 		return newTask;
 	} */
 
-	async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
-		return this.tasksRepository.createTask(createTaskDto);
+	async createTask(createTaskDto: CreateTaskDto, user: User): Promise<Task> {
+		return this.tasksRepository.createTask(createTaskDto, user);
 	}
 
 	/* async getTaskById(taskId: string): Promise<Task> {
@@ -74,8 +76,8 @@ export class TasksService {
 		}
 	} */
 
-	async getTaskById(taskId: string): Promise<Task> {
-		const found = this.tasksRepository.findOne(taskId);
+	async getTaskById(taskId: string, user: User): Promise<Task> {
+		const found = this.tasksRepository.findOne({ where: { id: taskId, user } });
 		if (!found) {
 			throw new NotFoundException(`Task with id ${taskId} not found`);
 		}
@@ -92,8 +94,8 @@ export class TasksService {
 		}
 	} */
 	
-	async deleteTaskById(taskId: string): Promise<Task> {
-		const task = await this.getTaskById(taskId);
+	async deleteTaskById(taskId: string, user: User): Promise<Task> {
+		const task = await this.getTaskById(taskId, user);
 		if (task) {
 			const result: DeleteResult = await this.tasksRepository.delete(taskId);
 			if (result.affected == 1) {
@@ -112,14 +114,14 @@ export class TasksService {
 		return task;
 	} */
 
-	async updateTaskStatus(taskId: string, status: TaskStatus): Promise<Task> {
-		const task = await this.getTaskById(taskId);
+	async updateTaskStatus(taskId: string, status: TaskStatus, user: User): Promise<Task> {
+		const task = await this.getTaskById(taskId, user);
 		task.status = status;
 		await this.tasksRepository.save(task);
 		return task;
 	}
 
-	private getNewId(): number {
+	/* private getNewId(): number {
 		return this.tasks.length + 1;
-	}
+	} */
 }
