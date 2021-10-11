@@ -6,8 +6,10 @@ import {
 	Post,
 	Delete,
 	Patch,
-	Query
+	Query,
+	UseGuards
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { UpdateTaskStatusDto } from './dto/update-task-status.dto';
@@ -15,6 +17,7 @@ import { ToLowerCase } from './pipes/lower-case.pipe';
 import { TasksService } from './tasks.service';
 
 @Controller('tasks') // This will hadnle requests to http://localhost:3000/tasks
+@UseGuards(AuthGuard())
 export class TasksController {
 	constructor(private tasksService: TasksService) {}
 
