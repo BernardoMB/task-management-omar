@@ -19,12 +19,10 @@ import { Task } from './model/task.entity';
 import { ToLowerCase } from './pipes/lower-case.pipe';
 import { TasksService } from './tasks.service';
 
-@Controller('tasks') // This will hadnle requests to http://localhost:3000/tasks
+@Controller('tasks')
 @UseGuards(AuthGuard())
 export class TasksController {
 	constructor(private tasksService: TasksService) {}
-
-	// CRUD (Create, Read, Update, Delete) methods:
 
 	@Post()
 	async createTask(
@@ -39,23 +37,20 @@ export class TasksController {
 		@Query() filterDto: GetTasksFilterDto,
 		@GetUser() user: User
 	) {
-		/* if (Object.keys(filterDto).length) {
-			return await this.tasksService.getTasksWithFilters(filterDto);
-		} else {
-			return await this.tasksService.getAllTasks();
-		} */
 		return this.tasksService.getTasks(filterDto, user);
 	}
 
 	@Get('/:id')
-	async getTaskById(@Param('id') id: string, @GetUser() user: User) {
+	async getTaskById(
+		@Param('id') id: string,
+		@GetUser() user: User
+	) {
 		return await this.tasksService.getTaskById(id, user);
 	}
 
 	@Patch('/:id/status')
 	async updateTaskStatus(
 		@Param('id') id: string,
-		//@Body('status') status: TaskStatus, // Get property status from body object
 		@Body() updateTaskStatusDto: UpdateTaskStatusDto,
 		@GetUser() user: User
 	) {
@@ -64,7 +59,10 @@ export class TasksController {
 	}
 
 	@Delete('/:id')
-	async deleteTask(@Param('id') id: string, @GetUser() user: User) {
+	async deleteTask(
+		@Param('id') id: string,
+		@GetUser() user: User
+	) {
 		return await this.tasksService.deleteTaskById(id, user);
 	}
 
