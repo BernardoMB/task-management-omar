@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { InjectRepository } from "@nestjs/typeorm";
 import { AuthCredentialsDto } from "./dto/auth-credentials.dto";
@@ -9,6 +9,8 @@ import { JwtPayload } from "./interfaces/jwt-payload.interface";
 
 @Injectable()
 export class AuthService {
+    private logger = new Logger('AuthService');
+
     constructor(
         @InjectRepository(UsersRepository)
         private usersRepository: UsersRepository,
@@ -23,7 +25,9 @@ export class AuthService {
         const { username, password } = authCredentialsDto;
         const user = await this.usersRepository.findOne({username});
         if (!user) {
-            throw new UnauthorizedException('We couldn\'t find any account with that username')
+            const msg = 'We couldn\'t find any account with that username';
+            this.logger.error(msg);
+            throw new UnauthorizedException(msg)
         }
         const canSignIn = user ? await bcrypt.compare(password, user.password) : false;
         if (canSignIn) {
@@ -32,7 +36,9 @@ export class AuthService {
             return { accessToken };
         } else {
             //throw new UnauthorizedException('Username or password are incorrect');
-            throw new UnauthorizedException('Incorrect password');
+            const msg = 'Incorrect password';
+            this.logger.error(msg);
+            throw new UnauthorizedException(msg);
         }
     }
 }

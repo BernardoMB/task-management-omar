@@ -2,10 +2,12 @@ import { EntityRepository, Repository } from "typeorm";
 import { AuthCredentialsDto } from "./dto/auth-credentials.dto";
 import { User } from "./model/user.entity";
 import * as bcrypt from 'bcrypt';
-import { ConflictException, InternalServerErrorException } from "@nestjs/common";
+import { ConflictException, InternalServerErrorException, Logger } from "@nestjs/common";
 
 @EntityRepository(User)
 export class UsersRepository extends Repository<User> {
+    private logger = new Logger('UsersRepository');
+
     async signUp(authCredentialsDto: AuthCredentialsDto): Promise<User> {
         const { username, password } = authCredentialsDto;
         const salt = await bcrypt.genSalt();
@@ -17,8 +19,12 @@ export class UsersRepository extends Repository<User> {
             return saved;
         } catch (error) {
             if (error.code === '23505') {
-                throw new ConflictException('Username alredy exists');
+                const msg = 'Username alredy exists';
+                this.logger.error(msg);
+                throw new ConflictException(msg);
             } else {
+                const msg = 'Unexpected error saving user';
+                this.logger.error(msg);
                 throw new InternalServerErrorException();
             }
         }

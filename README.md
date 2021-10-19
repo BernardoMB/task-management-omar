@@ -132,3 +132,9 @@ Objetivo en la aplicacion:
 * Proteger los recursos de los usuarios
 * Que los usuarios sean duseños de las tasks
 
+## Pending implementations
+
+* 2FA Authentication
+* Restrict failed login attempts
+* Email verification
+* Change password

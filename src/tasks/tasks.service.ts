@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { Task, TaskStatus } from './model/task.entity';
 import { v4 as uuid } from 'uuid';
@@ -11,6 +11,7 @@ import { identity } from 'rxjs';
 
 @Injectable()
 export class TasksService {
+	private logger = new Logger('TaskService');
 	
 	constructor(
 		@InjectRepository(TasksRepository)
@@ -26,9 +27,11 @@ export class TasksService {
 	}
 
 	async getTaskById(taskId: string, user: User): Promise<Task> {
-		const found = this.tasksRepository.findOne({ where: { id: taskId, user } });
+		const found = await this.tasksRepository.findOne({ where: { id: taskId, user } });
 		if (!found) {
-			throw new NotFoundException(`Task with id ${taskId} not found`);
+			const msg = `Task with id ${taskId} not found`;
+			this.logger.error(msg);
+			throw new NotFoundException(msg);
 		}
 		return found;
 	}
@@ -40,10 +43,14 @@ export class TasksService {
 			if (result.affected == 1) {
 				return task;
 			} else {
-				throw new NotFoundException(`Cannot delete task. None or more than one row would be affected.`);
+				const msg = `Cannot delete task. None or more than one row would be affected.`;
+				this.logger.error(msg);
+				throw new NotFoundException(msg);
 			}
 		} else {
-			throw new NotFoundException(`Cannot delete task. Task with id ${taskId} not found.`);
+			const msg = `Cannot delete task. Task with id ${taskId} not found.`;
+			this.logger.error(msg);
+			throw new NotFoundException(msg);
 		}
 	}
 
