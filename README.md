@@ -138,3 +138,4 @@ Objetivo en la aplicacion:
 * Restrict failed login attempts
 * Email verification
 * Change password
+* Implement user (user auth guard) and admin (admin auth guard) authentication strategy
